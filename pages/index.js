@@ -28,6 +28,7 @@ export function FirebaseDemo() {
           codes={getCodes()}
         />
       </div>
+      <button></button>
     </div>
   );
 }
