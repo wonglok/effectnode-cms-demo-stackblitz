@@ -7,11 +7,11 @@ import { GraphEditorPage } from "effectnode-cms";
 
 /* graphTitle: loklok */
 /* graphID: -MfyYdM7swln7PVk3_rp */
+/* ownerID: NGpUixuU0NOkOlmLsLuepkaZxxt1 */
 let graphID = `-MfyYdM7swln7PVk3_rp`;
+let ownerID = `NGpUixuU0NOkOlmLsLuepkaZxxt1`;
 
 export function FirebaseDemo() {
-  //
-
   return (
     <div style={{ width: "100%", height: "100%" }}>
       <Canvas style={{ width: "100%", height: "60%" }}>
@@ -21,7 +21,7 @@ export function FirebaseDemo() {
         <GraphEditorPage
           firebaseConfig={firebaseConfig}
           canvasID={graphID}
-          ownerID={`NGpUixuU0NOkOlmLsLuepkaZxxt1`}
+          ownerID={ownerID}
           codes={getCodes()}
         />
       </div>
@@ -39,28 +39,9 @@ export function EffectNodeInFiber() {
   });
 
   useEffect(() => {
-    getEffectNodeData({ firebaseConfig, graphID: graphID }).then((json) => {
-      graph.current = new ENRuntime({
-        json: json,
-        codes: getCodes(),
-      });
-
-      graph.current.mini.get("DefaultComponent").then((v) => {
-        setCompos(v);
-      });
-    });
-
-    return () => {
-      if (graph.current) {
-        graph.current.mini.clean();
-        graph.current.clean();
-      }
-    };
-  }, []);
-
-  useEffect(() => {
     let fn = () => {
       if (graph.current) {
+        setCompos(null);
         graph.current.mini.clean();
         graph.current.clean();
       }
@@ -73,11 +54,27 @@ export function EffectNodeInFiber() {
           json: json,
           codes: getCodes(),
         });
+
+        graph.current.mini.get("DefaultComponent").then((v) => {
+          setCompos(v);
+        });
       });
     };
+
     window.addEventListener("change-graph", fn);
     return () => {
       window.removeEventListener("change-graph", fn);
+    };
+  }, []);
+
+  useEffect(() => {
+    window.dispatchEvent(new window.CustomEvent("change-graph"));
+
+    return () => {
+      if (graph.current) {
+        graph.current.mini.clean();
+        graph.current.clean();
+      }
     };
   }, []);
 
