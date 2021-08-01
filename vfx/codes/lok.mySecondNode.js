@@ -3,17 +3,15 @@ import { useFrame } from "@react-three/fiber";
 
 export function effect({ mini, node }) {
   node.in0.stream((v) => {
-    console.log(v);
+    console.log("second", v);
   });
 
   mini.set("DefaultComponent", <MyCustomComponent />);
-  mini.onClean(() => {
-    mini.set("DefaultComponent", <group />);
-  });
 }
 
 function MyCustomComponent() {
   let ref = useRef();
+
   useFrame((st, dt) => {
     if (ref.current) {
       ref.current.rotation.x += dt * 0.5;
