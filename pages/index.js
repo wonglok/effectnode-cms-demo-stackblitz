@@ -1,18 +1,23 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { ENRuntime, getEffectNodeData } from 'effectnode';
+import React, { useEffect, useRef, useState } from "react";
+import { ENRuntime, getEffectNodeData } from "effectnode";
 
-import { Canvas, useFrame } from '@react-three/fiber';
-import { getCodes, firebaseConfig } from '../vfx';
-import { CMSOnePage } from 'effectnode-cms';
+import { Canvas, useFrame } from "@react-three/fiber";
+import { getCodes, firebaseConfig } from "../vfx";
+import { GraphEditorPage } from "effectnode-cms";
 
 export function FirebaseDemo() {
   return (
-    <div style={{ width: '100%', height: '100%' }}>
-      <Canvas style={{ width: '100%', height: '50%' }}>
+    <div style={{ width: "100%", height: "100%" }}>
+      <Canvas style={{ width: "100%", height: "50%" }}>
         <EffectNodeInFiber />
       </Canvas>
-      <div style={{ height: '50%', width: '100%' }}>
-        <CMSOnePage firebaseConfig={firebaseConfig} codes={getCodes()} />
+      <div style={{ height: "50%", width: "100%" }}>
+        <GraphEditorPage
+          firebaseConfig={firebaseConfig}
+          canvasID={`-MfyYdM7swln7PVk3_rp`}
+          ownerID={`NGpUixuU0NOkOlmLsLuepkaZxxt1`}
+          codes={getCodes()}
+        />
       </div>
     </div>
   );
@@ -31,13 +36,13 @@ export function EffectNodeInFiber() {
   /* graphID: -MfyYdM7swln7PVk3_rp */
   useEffect(() => {
     getEffectNodeData({ firebaseConfig, graphID: `-MfyYdM7swln7PVk3_rp` }).then(
-      json => {
+      (json) => {
         graph.current = new ENRuntime({
           json: json,
-          codes: getCodes()
+          codes: getCodes(),
         });
 
-        graph.current.mini.get('DefaultComponent').then(v => {
+        graph.current.mini.get("DefaultComponent").then((v) => {
           setCompos(v);
         });
       }
@@ -58,7 +63,7 @@ export function EffectNodeInFiber() {
         graph.current.mini.set(kn, three[kn]);
       }
       if (mounter.current) {
-        graph.current.mini.set('mounter', mounter.current);
+        graph.current.mini.set("mounter", mounter.current);
       }
       graph.current.mini.work();
     }
