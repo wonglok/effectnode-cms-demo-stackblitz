@@ -1,3 +1,3 @@
-# nextjs-em7qfh
+# EffectNode CMS Demo
 
-[Edit on StackBlitz ⚡️](https://stackblitz.com/edit/nextjs-em7qfh)
+YAY

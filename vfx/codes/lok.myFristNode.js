@@ -1,11 +1,11 @@
-import { Color, Mesh, MeshBasicMaterial, SphereBufferGeometry } from 'three';
+import { Color, Mesh, MeshBasicMaterial, SphereBufferGeometry } from "three";
 
 export async function effect({ mini, node }) {
   let mounter = await mini.ready.mounter;
   let geo = new SphereBufferGeometry(1.5, 32, 32);
   let mat = new MeshBasicMaterial({
-    color: new Color('#ff0000'),
-    wireframe: true
+    color: new Color("#ff0000"),
+    wireframe: true,
   });
   let mesh = new Mesh(geo, mat);
   mounter.add(mesh);
@@ -16,13 +16,20 @@ export async function effect({ mini, node }) {
 
   mini.onClean(() => {
     mounter.remove(mesh);
+    mesh.geometry.dispose();
+    mesh.material.dispose();
   });
 
   let i = 0;
-  setInterval(() => {
+  let tt = setInterval(() => {
     i++;
     node.out0.pulse({
-      myMessage: 'data @' + i
+      myMessage: "data @" + i,
     });
   }, 1000);
+  mini.onClean(() => {
+    clearInterval(tt);
+  });
 }
+
+//

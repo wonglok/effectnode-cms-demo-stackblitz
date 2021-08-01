@@ -1,12 +1,15 @@
-import React, { useRef } from 'react';
-import { useFrame } from '@react-three/fiber';
+import React, { useRef } from "react";
+import { useFrame } from "@react-three/fiber";
 
 export function effect({ mini, node }) {
-  node.in0.stream(v => {
+  node.in0.stream((v) => {
     console.log(v);
   });
 
-  mini.set('DefaultComponent', <MyCustomComponent />);
+  mini.set("DefaultComponent", <MyCustomComponent />);
+  mini.onClean(() => {
+    mini.set("DefaultComponent", <group />);
+  });
 }
 
 function MyCustomComponent() {
@@ -21,7 +24,7 @@ function MyCustomComponent() {
     <group>
       <mesh ref={ref}>
         <boxBufferGeometry args={[3, 3, 3, 2, 2, 2]} />
-        <meshBasicMaterial color={'blue'} wireframe={true} />
+        <meshBasicMaterial color={"blue"} wireframe={true} />
       </mesh>
     </group>
   );

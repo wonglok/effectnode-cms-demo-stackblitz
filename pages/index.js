@@ -5,16 +5,22 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { getCodes, firebaseConfig } from "../vfx";
 import { GraphEditorPage } from "effectnode-cms";
 
+/* graphTitle: loklok */
+/* graphID: -MfyYdM7swln7PVk3_rp */
+let graphID = `-MfyYdM7swln7PVk3_rp`;
+
 export function FirebaseDemo() {
+  //
+
   return (
     <div style={{ width: "100%", height: "100%" }}>
-      <Canvas style={{ width: "100%", height: "50%" }}>
+      <Canvas style={{ width: "100%", height: "60%" }}>
         <EffectNodeInFiber />
       </Canvas>
-      <div style={{ height: "50%", width: "100%" }}>
+      <div style={{ height: "40%", width: "100%" }}>
         <GraphEditorPage
           firebaseConfig={firebaseConfig}
-          canvasID={`-MfyYdM7swln7PVk3_rp`}
+          canvasID={graphID}
           ownerID={`NGpUixuU0NOkOlmLsLuepkaZxxt1`}
           codes={getCodes()}
         />
@@ -32,27 +38,46 @@ export function EffectNodeInFiber() {
     return <group />;
   });
 
-  /* graphTitle: loklok */
-  /* graphID: -MfyYdM7swln7PVk3_rp */
   useEffect(() => {
-    getEffectNodeData({ firebaseConfig, graphID: `-MfyYdM7swln7PVk3_rp` }).then(
-      (json) => {
-        graph.current = new ENRuntime({
-          json: json,
-          codes: getCodes(),
-        });
+    getEffectNodeData({ firebaseConfig, graphID: graphID }).then((json) => {
+      graph.current = new ENRuntime({
+        json: json,
+        codes: getCodes(),
+      });
 
-        graph.current.mini.get("DefaultComponent").then((v) => {
-          setCompos(v);
-        });
-      }
-    );
+      graph.current.mini.get("DefaultComponent").then((v) => {
+        setCompos(v);
+      });
+    });
 
     return () => {
       if (graph.current) {
         graph.current.mini.clean();
         graph.current.clean();
       }
+    };
+  }, []);
+
+  useEffect(() => {
+    let fn = () => {
+      if (graph.current) {
+        graph.current.mini.clean();
+        graph.current.clean();
+      }
+
+      getEffectNodeData({
+        firebaseConfig,
+        graphID: graphID,
+      }).then((json) => {
+        graph.current = new ENRuntime({
+          json: json,
+          codes: getCodes(),
+        });
+      });
+    };
+    window.addEventListener("change-graph", fn);
+    return () => {
+      window.removeEventListener("change-graph", fn);
     };
   }, []);
 
