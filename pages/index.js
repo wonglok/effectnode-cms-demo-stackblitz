@@ -9,7 +9,7 @@ export function FirebaseDemo() {
       <Canvas style={{ width: '100%', height: '50%' }}>
         <EffectNodeInFiber />
       </Canvas>
-      <div style={{ height: '50%', width: '100%' }} />
+      <div style={{ height: '50%', width: '100%' }}>123</div>
     </div>
   );
 }
@@ -60,7 +60,9 @@ export function EffectNodeInFiber() {
     }
   });
 
-  return <group ref={mounter}>{myInst}</group>;
+  return (
+    <group>
+      <group ref={mounter}>{myInst}</group>
+    </group>
+  );
 }
-
-//
