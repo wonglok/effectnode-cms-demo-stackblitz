@@ -9,7 +9,7 @@ export function FirebaseDemo() {
       <Canvas style={{ width: '100%', height: '50%' }}>
         <EffectNodeInFiber />
       </Canvas>
-      <iframe style={{ height: '50%', width: '100%' }} src={'/cms'} />
+      <div style={{ height: '50%', width: '100%' }} />
     </div>
   );
 }
