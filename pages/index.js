@@ -11,6 +11,9 @@ import { GraphEditorPage } from "effectnode-cms";
 let graphID = `-MfyYdM7swln7PVk3_rp`;
 let ownerID = `NGpUixuU0NOkOlmLsLuepkaZxxt1`;
 
+// visit
+// http://localhost:3000/cms
+
 export function FirebaseDemo() {
   return (
     <div style={{ width: "100%", height: "100%" }}>
