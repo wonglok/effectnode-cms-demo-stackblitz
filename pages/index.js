@@ -28,7 +28,24 @@ export function FirebaseDemo() {
           codes={getCodes()}
         />
       </div>
-      <button></button>
+      <a
+        style={{
+          display: "inline-block",
+          position: "absolute",
+          bottom: "10px",
+          right: "10px",
+          backgroundColor: "blue",
+          padding: "15px 20px",
+          color: "white",
+          borderRadius: "20px",
+          fontSize: "20px",
+          lineHeight: "20px",
+        }}
+        target="_blank"
+        href="/cms"
+      >
+        /cms
+      </a>
     </div>
   );
 }
