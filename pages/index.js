@@ -15,6 +15,22 @@ let ownerID = `NGpUixuU0NOkOlmLsLuepkaZxxt1`;
 // http://localhost:3000/cms
 
 export function FirebaseDemo() {
+  useEffect(() => {
+    let setH100 = (q) => {
+      try {
+        let dom = document.querySelector(q);
+        if (dom) {
+          dom.style.height = "100%";
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    setH100("html");
+    setH100("body");
+    setH100("#root");
+    setH100("#__next");
+  }, []);
   return (
     <div style={{ width: "100%", height: "100%" }}>
       <Canvas style={{ width: "100%", height: "60%" }}>
@@ -60,7 +76,7 @@ export function EffectNodeInFiber() {
   });
 
   useEffect(() => {
-    let fn = () => {
+    let onChangeGraph = () => {
       if (graph.current) {
         setCompos(null);
         graph.current.mini.clean();
@@ -82,17 +98,20 @@ export function EffectNodeInFiber() {
       });
     };
 
-    window.addEventListener("change-graph", fn);
+    window.addEventListener("change-graph", onChangeGraph);
     return () => {
-      window.removeEventListener("change-graph", fn);
+      window.removeEventListener("change-graph", onChangeGraph);
     };
   }, []);
 
   useEffect(() => {
+    // init signal
     window.dispatchEvent(new window.CustomEvent("change-graph"));
 
     return () => {
+      // cleanup on unmount
       if (graph.current) {
+        setCompos(null);
         graph.current.mini.clean();
         graph.current.clean();
       }
