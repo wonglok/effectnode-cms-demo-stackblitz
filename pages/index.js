@@ -1,7 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { ENRuntime, getEffectNodeData } from 'effectnode';
+
 import { Canvas, useFrame } from '@react-three/fiber';
 import { getCodes, firebaseConfig } from '../vfx';
+import { CMSOnePage } from 'effectnode-cms';
 
 export function FirebaseDemo() {
   return (
@@ -9,7 +11,9 @@ export function FirebaseDemo() {
       <Canvas style={{ width: '100%', height: '50%' }}>
         <EffectNodeInFiber />
       </Canvas>
-      <div style={{ height: '50%', width: '100%' }}>123</div>
+      <div style={{ height: '50%', width: '100%' }}>
+        <CMSOnePage firebaseConfig={firebaseConfig} codes={getCodes()} />
+      </div>
     </div>
   );
 }
