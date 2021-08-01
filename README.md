@@ -19,8 +19,6 @@
 3. Add your domain to firebase authenitcation domain authorisation, and enable google login
 
 ![image](https://user-images.githubusercontent.com/4082826/127787502-9019ac24-f882-4ac4-b20d-af86d57bc32a.png)
-
-![image](https://user-images.githubusercontent.com/4082826/127787511-c55c8a96-2267-4c60-994d-d8b673f4bcc3.png)
-
 ![image](https://user-images.githubusercontent.com/4082826/127787570-76300af0-5c23-43cc-92b6-4c5f3275345c.png)
+![image](https://user-images.githubusercontent.com/4082826/127787511-c55c8a96-2267-4c60-994d-d8b673f4bcc3.png)
 
