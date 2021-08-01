@@ -6,9 +6,10 @@ import { getCodes, firebaseConfig } from '../vfx';
 export function FirebaseDemo() {
   return (
     <div style={{ width: '100%', height: '100%' }}>
-      <Canvas style={{ width: '100%', height: '100%' }}>
+      <Canvas style={{ width: '100%', height: '50%' }}>
         <EffectNodeInFiber />
       </Canvas>
+      <iframe style={{ height: '50%' }} src={'/cms'} />
     </div>
   );
 }
@@ -59,9 +60,7 @@ export function EffectNodeInFiber() {
     }
   });
 
-  return (
-    <>
-      <group ref={mounter}>{myInst}</group>
-    </>
-  );
+  return <group ref={mounter}>{myInst}</group>;
 }
+
+//
