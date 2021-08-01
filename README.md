@@ -8,8 +8,19 @@
 ## Installation
 
 1. Copy and Paste Firebase Confing into `/vfx/firebaseConfig.js`
+![image](https://user-images.githubusercontent.com/4082826/127787536-7fc6384f-4d3d-46e9-b082-4df6e59ee808.png)
+![image](https://user-images.githubusercontent.com/4082826/127787539-c316d64c-7564-4b2b-b27e-83a00b9e7ea0.png)
+
 
 2. Copy and Paste Firebase Securiy Rules from `/firebase.rules.json` to firebase realtimedatabase security rules page
+![image](https://user-images.githubusercontent.com/4082826/127787521-4aef1d98-fded-4516-870a-16ec355607c6.png)
 
-3. Add your domain to firebase authenitcation domain authorisation
+
+3. Add your domain to firebase authenitcation domain authorisation, and enable google login
+
+![image](https://user-images.githubusercontent.com/4082826/127787502-9019ac24-f882-4ac4-b20d-af86d57bc32a.png)
+
+![image](https://user-images.githubusercontent.com/4082826/127787511-c55c8a96-2267-4c60-994d-d8b673f4bcc3.png)
+
+![image](https://user-images.githubusercontent.com/4082826/127787570-76300af0-5c23-43cc-92b6-4c5f3275345c.png)
 
