@@ -22,8 +22,10 @@ export function EffectNodeInFiber() {
     return <group />;
   });
 
+  /* graphTitle: loklok */
+  /* graphID: -MfyYdM7swln7PVk3_rp */
   useEffect(() => {
-    getEffectNodeData({ firebaseConfig, graphID: `-MdBQtfGPXXPkl-NuEoW` }).then(
+    getEffectNodeData({ firebaseConfig, graphID: `-MfyYdM7swln7PVk3_rp` }).then(
       json => {
         graph.current = new ENRuntime({
           json: json,
