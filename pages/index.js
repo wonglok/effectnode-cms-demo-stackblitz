@@ -46,8 +46,13 @@ export function FirebaseDemo() {
 
           getGPUTier({ glContext: gl.getContext() }).then((v) => {
             let setDPR = ([a, b]) => {
+              let base = window.devicePixelRatio || 1;
+              if (b >= base) {
+                b = base;
+              }
               gl.setPixelRatio(b);
             };
+
             // ipad
             if (v.gpu === "apple a9x gpu") {
               setDPR([1, 1]);
