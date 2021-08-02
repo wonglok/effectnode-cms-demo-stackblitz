@@ -17,12 +17,4 @@ export async function effect({ mini, node }) {
   mini.onClean(() => {
     mounter.remove(mesh);
   });
-
-  let i = 0;
-  setInterval(() => {
-    i++;
-    node.out0.pulse({
-      myMessage: "data @" + i,
-    });
-  }, 1000);
 }

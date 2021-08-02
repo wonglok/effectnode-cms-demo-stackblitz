@@ -4,6 +4,9 @@ import { ENRuntime, getEffectNodeData } from "effectnode";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { getCodes, firebaseConfig } from "../vfx";
 import { GraphEditorPage } from "effectnode-cms";
+import { PCFSoftShadowMap, sRGBEncoding } from "three";
+import { OrbitControls } from "@react-three/drei";
+import { getGPUTier } from "detect-gpu";
 
 //123
 
@@ -35,8 +38,40 @@ export function FirebaseDemo() {
   }, []);
   return (
     <div style={{ width: "100%", height: "100%" }}>
-      <Canvas style={{ width: "100%", height: "60%" }}>
+      <Canvas
+        onCreated={({ gl }) => {
+          gl.outputEncoding = sRGBEncoding;
+          gl.shadowMap.enabled = true;
+          gl.shadowMap.type = PCFSoftShadowMap;
+
+          getGPUTier({ glContext: gl.getContext() }).then((v) => {
+            let setDPR = ([a, b]) => {
+              gl.setPixelRatio(b);
+            };
+            // ipad
+            if (v.gpu === "apple a9x gpu") {
+              setDPR([1, 1]);
+              return;
+            }
+            if (v.fps < 30) {
+              setDPR([1, 1]);
+              return;
+            }
+            if (v.tier >= 3) {
+              setDPR([1, 3]);
+            } else if (v.tier >= 2) {
+              setDPR([1, 2]);
+            } else if (v.tier >= 1) {
+              setDPR([1, 1]);
+            } else if (v.tier < 1) {
+              setDPR([1, 0.75]);
+            }
+          });
+        }}
+        style={{ width: "100%", height: "60%" }}
+      >
         <EffectNodeInFiber />
+        {/* <OrbitControls></OrbitControls> */}
       </Canvas>
       <div style={{ height: "40%", width: "100%" }}>
         <GraphEditorPage
@@ -139,3 +174,5 @@ export function EffectNodeInFiber() {
     </group>
   );
 }
+
+//

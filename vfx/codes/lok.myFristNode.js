@@ -24,7 +24,7 @@ export async function effect({ mini, node }) {
   let tt = setInterval(() => {
     i++;
     node.out0.pulse({
-      myMessage: "data @" + i,
+      myMessage: "firstndoe @" + i,
     });
   }, 1000);
   mini.onClean(() => {
