@@ -6,7 +6,7 @@ export function effect({ mini, node }) {
     console.log("second", v);
   });
 
-  mini.set("DefaultComponent", <MyCustomComponent />);
+  mini.set("MyCustomComponent", <MyCustomComponent />);
 }
 
 function MyCustomComponent() {
@@ -21,8 +21,8 @@ function MyCustomComponent() {
   return (
     <group>
       <mesh ref={ref}>
-        <boxBufferGeometry args={[3, 3, 3, 2, 2, 2]} />
-        <meshBasicMaterial color={"blue"} wireframe={true} />
+        <boxBufferGeometry args={[1, 1, 1, 2, 2, 2]} />
+        <meshBasicMaterial color={"green"} wireframe={true} />
       </mesh>
     </group>
   );

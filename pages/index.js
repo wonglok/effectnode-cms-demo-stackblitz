@@ -1,183 +1,179 @@
 import React, { useEffect, useRef, useState } from "react";
 import { ENRuntime, getEffectNodeData } from "effectnode";
 
-import { Canvas, useFrame } from "@react-three/fiber";
-import { getCodes, firebaseConfig } from "../vfx";
+import { OrbitControls } from "@react-three/drei";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
+
+import { getCodes, firebaseConfig } from "../vfx/index.js";
 import { GraphEditorPage } from "effectnode-cms";
 import { PCFSoftShadowMap, sRGBEncoding } from "three";
-import { OrbitControls } from "@react-three/drei";
 import { getGPUTier } from "detect-gpu";
-
-//123
-
-/* graphTitle: loklok */
-/* graphID: -MfyYdM7swln7PVk3_rp */
-/* ownerID: NGpUixuU0NOkOlmLsLuepkaZxxt1 */
-let graphID = `-MfyYdM7swln7PVk3_rp`;
-let ownerID = `NGpUixuU0NOkOlmLsLuepkaZxxt1`;
 
 // visit
 // http://localhost:3000/cms
 
-export function FirebaseDemo() {
-  useEffect(() => {
-    let setH100 = (q) => {
-      try {
-        let dom = document.querySelector(q);
-        if (dom) {
-          dom.style.height = "100%";
-        }
-      } catch (e) {
-        console.log(e);
-      }
-    };
-    setH100("html");
-    setH100("body");
-    setH100("#root");
-    setH100("#__next");
-  }, []);
+export function Page() {
+  /* graphTitle: loklok */
+  /* canvasID: -MfyYdM7swln7PVk3_rp */
+  /* ownerID: NGpUixuU0NOkOlmLsLuepkaZxxt1 */
+  let canvasID = `-MfyYdM7swln7PVk3_rp`;
+  let ownerID = `NGpUixuU0NOkOlmLsLuepkaZxxt1`;
+
   return (
     <div style={{ width: "100%", height: "100%" }}>
-      <Canvas
-        onCreated={({ gl }) => {
-          gl.outputEncoding = sRGBEncoding;
-          gl.shadowMap.enabled = true;
-          gl.shadowMap.type = PCFSoftShadowMap;
+      <div style={{ height: "65%", width: "100%" }}>
+        <Canvas
+          onCreated={({ gl }) => {
+            gl.outputEncoding = sRGBEncoding;
+            gl.shadowMap.enabled = true;
+            gl.shadowMap.type = PCFSoftShadowMap;
+          }}
+        >
+          <EffectNodeRuntime
+            firebaseConfig={firebaseConfig}
+            canvasID={canvasID}
+            ownerID={ownerID}
+          >
+            {({ runtime }) => {
+              return (
+                <RuntimeComponent
+                  name={"MyCustomComponent"}
+                  runtime={runtime}
+                ></RuntimeComponent>
+              );
+            }}
+          </EffectNodeRuntime>
 
-          getGPUTier({ glContext: gl.getContext() }).then((v) => {
-            let setDPR = ([a, b]) => {
-              let base = window.devicePixelRatio || 1;
-              if (b >= base) {
-                b = base;
-              }
-              gl.setPixelRatio(b);
-            };
+          <AdaptivePixelRatio></AdaptivePixelRatio>
 
-            // ipad
-            if (v.gpu === "apple a9x gpu") {
-              setDPR([1, 1]);
-              return;
-            }
-            if (v.fps < 30) {
-              setDPR([1, 1]);
-              return;
-            }
-            if (v.tier >= 3) {
-              setDPR([1, 3]);
-            } else if (v.tier >= 2) {
-              setDPR([1, 2]);
-            } else if (v.tier >= 1) {
-              setDPR([1, 1]);
-            } else if (v.tier < 1) {
-              setDPR([1, 0.75]);
-            }
-          });
-        }}
-        style={{ width: "100%", height: "60%" }}
-      >
-        <EffectNodeInFiber />
-        {/* <OrbitControls></OrbitControls> */}
-      </Canvas>
-      <div style={{ height: "40%", width: "100%" }}>
+          <OrbitControls></OrbitControls>
+        </Canvas>
+      </div>
+      <div style={{ height: "35%", width: "100%" }}>
         <GraphEditorPage
           firebaseConfig={firebaseConfig}
-          canvasID={graphID}
+          canvasID={canvasID}
           ownerID={ownerID}
           codes={getCodes()}
         />
       </div>
-      <a
-        style={{
-          display: "inline-block",
-          position: "absolute",
-          bottom: "10px",
-          right: "10px",
-          backgroundColor: "blue",
-          padding: "15px 20px",
-          color: "white",
-          borderRadius: "20px",
-          fontSize: "20px",
-          lineHeight: "20px",
-        }}
-        target="_blank"
-        href="/cms"
-      >
-        /cms
-      </a>
     </div>
   );
 }
 
-export default FirebaseDemo;
-
-export function EffectNodeInFiber() {
+export function EffectNodeRuntime({ firebaseConfig, canvasID, children }) {
   let mounter = useRef();
-  let graph = useRef();
-  let [myInst, setCompos] = useState(() => {
-    return <group />;
-  });
+  let [runtime, setRuntime] = useState(false);
+  let [endata, setENData] = useState(false);
 
   useEffect(() => {
-    let onChangeGraph = () => {
-      if (graph.current) {
-        setCompos(null);
-        graph.current.mini.clean();
-        graph.current.clean();
-      }
-
+    let h = () => {
       getEffectNodeData({
         firebaseConfig,
-        graphID: graphID,
+        graphID: canvasID,
       }).then((json) => {
-        graph.current = new ENRuntime({
-          json: json,
-          codes: getCodes(),
-        });
-
-        graph.current.mini.get("DefaultComponent").then((v) => {
-          setCompos(v);
-        });
+        setENData(json);
       });
     };
+    h();
 
-    window.addEventListener("change-graph", onChangeGraph);
+    window.addEventListener("change-graph", h);
     return () => {
-      window.removeEventListener("change-graph", onChangeGraph);
+      window.removeEventListener("change-graph", h);
     };
-  }, []);
+  }, [JSON.stringify(firebaseConfig), canvasID]);
 
   useEffect(() => {
-    // init signal
-    window.dispatchEvent(new window.CustomEvent("change-graph"));
+    if (endata) {
+      let newRuntime = new ENRuntime({
+        json: endata,
+        codes: getCodes(),
+      });
 
-    return () => {
-      // cleanup on unmount
-      if (graph.current) {
-        setCompos(null);
-        graph.current.mini.clean();
-        graph.current.clean();
-      }
-    };
-  }, []);
+      setRuntime(newRuntime);
 
-  useFrame(({ get }) => {
-    let three = get();
-    if (graph.current) {
+      return () => {
+        if (newRuntime) {
+          newRuntime.mini.clean();
+          newRuntime.clean();
+        }
+      };
+    } else {
+      return () => {};
+    }
+  }, [endata]);
+
+  useFrame((three) => {
+    if (runtime) {
       for (let kn in three) {
-        graph.current.mini.set(kn, three[kn]);
+        runtime.mini.set(kn, three[kn]);
       }
       if (mounter.current) {
-        graph.current.mini.set("mounter", mounter.current);
+        runtime.mini.set("mounter", mounter.current);
       }
-      graph.current.mini.work();
+      runtime.mini.work();
     }
   });
 
   return (
-    <group>
-      <group ref={mounter}>{myInst}</group>
+    <group ref={mounter}>
+      {runtime && typeof children === "function" && children({ runtime })}
     </group>
   );
 }
 
+function RuntimeComponent({ name, runtime }) {
+  let [instance, setCompos] = useState(() => {
+    return null;
+  });
+
+  useEffect(() => {
+    runtime.mini.get(name).then((v) => {
+      setCompos(v);
+    });
+    return () => {
+      setCompos(null);
+    };
+  }, [runtime]);
+
+  return instance;
+}
+
 //
+
+function AdaptivePixelRatio() {
+  let { gl } = useThree();
+  useEffect(() => {
+    getGPUTier({ glContext: gl.getContext() }).then((v) => {
+      let setDPR = ([a, b]) => {
+        let base = window.devicePixelRatio || 1;
+        if (b >= base) {
+          b = base;
+        }
+        gl.setPixelRatio(b);
+      };
+
+      if (v.gpu === "apple a9x gpu") {
+        setDPR([1, 1]);
+        return;
+      }
+      if (v.fps < 30) {
+        setDPR([1, 1]);
+        return;
+      }
+      if (v.tier >= 3) {
+        setDPR([1, 3]);
+      } else if (v.tier >= 2) {
+        setDPR([1, 2]);
+      } else if (v.tier >= 1) {
+        setDPR([1, 1]);
+      } else if (v.tier < 1) {
+        setDPR([1, 0.75]);
+      }
+    });
+  });
+
+  return null;
+}
+
+export default Page;
